@@ -12,3 +12,4 @@ Filters according to a set of values. The operators are in, notin, and exists. F
 - Support for dual-stack, IPv4 and IPv6 continues to increase with each release. For example, in a recent release kube-proxy iptables supports both stacks simultaneously.
 - [Reff link for Networking Model](https://speakerdeck.com/thockin/illustrated-guide-to-kubernetes-networking)
 - [Reff link for Networking in details](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+- [Google Borg K8s podcast voice](https://www.gcppodcast.com/post/episode-46-borg-and-k8s-with-john-wilkes/)
