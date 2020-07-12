@@ -13,4 +13,5 @@ Filters according to a set of values. The operators are in, notin, and exists. F
 - [Reff link for Networking Model](https://speakerdeck.com/thockin/illustrated-guide-to-kubernetes-networking)
 - [Reff link for Networking in details](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 - [Google Borg K8s podcast voice](https://www.gcppodcast.com/post/episode-46-borg-and-k8s-with-john-wilkes/)
+- [First StackOverflow update by me] (https://stackoverflow.com/questions/56800733/openshift-3-11-edit-deployment-config-cant-add-command/62865744#62865744)
 
