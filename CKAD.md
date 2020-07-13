@@ -123,3 +123,28 @@ spec:
 ```
 ### Note : Lessons learnt from sample deployment files are 
 - Selector and matchlabels should be present at Deployments/ ReplicationController / Replicationset resources. And lables should be present in template so as to start monitored by above resources.
+
+- If you simply want to test your command, use the --dry-run=client option. This will not create the resource, instead, tell you whether the resource can be created and if your command is right.
+- -o yaml: This will output the resource definition in YAML format on the screen.
+### POD Create an NGINX Pod
+```
+kubectl run nginx --image=nginx
+```
+### Generate POD Manifest YAML file (-o yaml). Don't create it(--dry-run)
+```
+kubectl run nginx --image=nginx  --dry-run=client -o yaml
+```
+### Deployment: Create a deployment
+```
+kubectl create deployment --image=nginx nginx
+```
+### Generate Deployment YAML file (-o yaml). Don't create it(--dry-run)
+```
+kubectl create deployment --image=nginx nginx --dry-run=client -o yaml
+```
+### kubectl create deployment does not have a --replicas option. You could first create it and then scale it using the kubectl scale command.
+
+- kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml
+
+- You can then update the YAML file with the replicas or any other field before creating the deployment.
+
