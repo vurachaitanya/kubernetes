@@ -175,3 +175,29 @@ kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run=cl
 - Both the above commands have their own challenges. While one of it cannot accept a selector the other cannot accept a node port. I would recommend going with the `kubectl expose` command. If you need to specify a node port, generate a definition file using the same command and manually input the nodeport before creating the service.
 
 [Reff link for more command line details](https://kubernetes.io/docs/reference/kubectl/conventions/)
+
+### Sample deployment file parsing command line 
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: busybox-pod
+  template:
+    metadata:
+      labels:
+        name: busybox-pod
+    spec:
+      containers:
+      - name: busybox-container
+        image: busybox888
+        command:
+        - sh
+        - "-c"
+        - echo Hello Kubernetes! && sleep 3600
+```
