@@ -215,4 +215,6 @@ spec:
 -o yamlOutput a YAML formatted API object.
 ```
 - Set the default namespace `kubectl config set-context $(kubectl config current-context) --namespace=dev`
-- create pod and services and then use this to link `kubectl run httpd --image=httpd:alpine --port=80 --expose`
+
+- Create a pod called httpd using the image httpd:alpine in the default namespace. Next, create a service of type ClusterIP by the same name (httpd). The target port for the service should be 80.
+- Solution:  `kubectl run httpd --image=httpd:alpine --port=80 --expose`
