@@ -95,3 +95,27 @@ spec:
      image: grafana:latest
 
 ```
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaitudepl
+  namespace: chaitudemo
+  labels:
+    app: test
+spec:
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      name: chaitudepl1
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: nginex
+          image: grafana:latest
+  replicas: 3
+
+```
