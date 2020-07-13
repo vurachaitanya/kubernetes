@@ -153,8 +153,7 @@ kubectl create deployment --image=nginx nginx --dry-run=client -o yaml
 kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml
 ```
 - This will automatically use the pod's labels as selectors
-
-Or
+OR
 ```
 kubectl create service clusterip redis --tcp=6379:6379 --dry-run=client -o yaml 
 ```
@@ -202,7 +201,10 @@ spec:
         - echo Hello Kubernetes! && sleep 3600
 ```
 
-### Here are some of the commonly used formats:
+### Here are some of the commonly used formats: 
+- [K8s_details](https://kubernetes.io/docs/reference/kubectl/overview/)
+- [K8s_cheetsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
 ```
 -o jsonOutput a JSON formatted API object.
 
