@@ -13,5 +13,85 @@ Filters according to a set of values. The operators are in, notin, and exists. F
 - [Reff link for Networking Model](https://speakerdeck.com/thockin/illustrated-guide-to-kubernetes-networking)
 - [Reff link for Networking in details](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 - [Google Borg K8s podcast voice](https://www.gcppodcast.com/post/episode-46-borg-and-k8s-with-john-wilkes/)
-- [First StackOverflow update by me] (https://stackoverflow.com/questions/56800733/openshift-3-11-edit-deployment-config-cant-add-command/62865744#62865744)
+- [First StackOverflow update by me](https://stackoverflow.com/questions/56800733/openshift-3-11-edit-deployment-config-cant-add-command/62865744#62865744)
 
+```
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx
+  namespace: chaitudemo
+spec:
+  replicas: 3
+  selector:
+    app: nginx
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.0-debian-9
+        ports:
+        - containerPort: 80
+
+```
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: grafana
+  namespace: chaitudemo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      df: gf
+  template:
+    metadata:
+      name: grafanapod
+      labels:
+        df: gf
+    spec:
+      containers:
+        - name: grafanacon
+          image: grafana:latest
+
+```
+```
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: abc1
+  namespace: chaitudemo
+spec:
+  replicas: 3
+#  selector:
+#    app: test
+  template:
+    metadata:
+      name: grafanapod
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: grafanacon
+          image: grafana:latest
+
+```
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod3
+  namespace: chaitudemo
+spec:
+  containers:
+   - name: chaitucont
+     image: nginx:1.14.0-debian-9
+   - name: chaitugrafana
+     image: grafana:latest
+
+```
