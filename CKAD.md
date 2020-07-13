@@ -215,3 +215,4 @@ spec:
 -o yamlOutput a YAML formatted API object.
 ```
 - Set the default namespace `kubectl config set-context $(kubectl config current-context) --namespace=dev`
+- create pod and services and then use this to link `kubectl run httpd --image=httpd:alpine --port=80 --expose`
