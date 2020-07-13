@@ -214,3 +214,4 @@ spec:
 
 -o yamlOutput a YAML formatted API object.
 ```
+- Set the default namespace `kubectl config set-context $(kubectl config current-context) --namespace=dev`
