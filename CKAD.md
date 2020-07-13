@@ -15,6 +15,7 @@ Filters according to a set of values. The operators are in, notin, and exists. F
 - [Google Borg K8s podcast voice](https://www.gcppodcast.com/post/episode-46-borg-and-k8s-with-john-wilkes/)
 - [First StackOverflow update by me](https://stackoverflow.com/questions/56800733/openshift-3-11-edit-deployment-config-cant-add-command/62865744#62865744)
 
+### Sample ReplicationController yml file
 ```
 apiVersion: v1
 kind: ReplicationController
@@ -38,6 +39,7 @@ spec:
         - containerPort: 80
 
 ```
+### Sample ReplicaSet yml
 ```
 apiVersion: apps/v1
 kind: ReplicaSet
@@ -60,6 +62,7 @@ spec:
           image: grafana:latest
 
 ```
+### Sample ReplicationController deplyments
 ```
 apiVersion: v1
 kind: ReplicationController
@@ -81,6 +84,7 @@ spec:
           image: grafana:latest
 
 ```
+### Sample pod deployment 
 ```
 apiVersion: v1
 kind: Pod
@@ -95,14 +99,13 @@ spec:
      image: grafana:latest
 
 ```
+### Deployments Sample yml
 ```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chaitudepl
+  name: chaitudep3
   namespace: chaitudemo
-  labels:
-    app: test
 spec:
   selector:
     matchLabels:
@@ -117,5 +120,6 @@ spec:
         - name: nginex
           image: grafana:latest
   replicas: 3
-
 ```
+### Note : Lessons learnt from sample deployment files are 
+- Selector and matchlabels should be present at Deployments/ ReplicationController / Replicationset resources. And lables should be present in template so as to start monitored by above resources.
