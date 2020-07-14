@@ -321,3 +321,20 @@ volumes:
     configMap:
       name: app-config
 ```
+- Webapp for color change
+```
+apiVersion: v1
+kind: Pod
+metadata:
+    labels:
+      name: webapp-color
+    name: chaituapp
+    namespace: default
+spec:
+    containers:
+    - env:
+      - name: APP_COLOR
+        value: pink
+      image: kodekloud/webapp-color
+      name: webapp-color
+```
