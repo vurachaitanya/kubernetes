@@ -258,3 +258,66 @@ spec:
 
 - Edit Deployments :
  With Deployments you can easily edit any field/property of the POD template. Since the pod template is a child of the deployment specification,  with every change the deployment will automatically delete and create a new pod with the new changes. So if you are asked to edit a property of a POD part of a deployment you may do that simply by running the command `kubectl edit deployment my-deployment`
+
+###  ConfigMaps: 
+
+-  Imperative (Command mode) :
+` kubectl create configmap app-config –from-literal=APP_COLOR=blue –from-literal:APP_MOD=prod `
+` kubectl create configmap app-config –from-file=app_config.properties `
+
+
+- Declarative (File mode) :
+
+```
+# cat Config-map.yaml
+appVersion: v1
+kind: ConfigMap
+metadata:
+  name:app-config
+data:
+   APP_COLOR: blue
+   APP_MODE: prod
+```
+- Sample ConfigMap used in pods:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+   name: sample-webapp-color
+   labels:
+      name: sample-webapp-color
+spec:
+  containers:
+-	name: sample-webapp-color
+  image: sample-webapp-color
+  ports:
+    - containerPort: 8080
+  envFrom:
+    - configMapRef:
+        name: app-config
+```
+
+### Sample ConfigMap in pods Def:
+- ENV
+```
+envFrom:
+-	configMapRef:
+    name:app-config
+```
+- Single Env:
+```
+env:
+  - name: APP_COLOR
+  valueFrom:
+     configMapKeyRef:
+       name: app-config
+       key: APP_COLOR
+```
+- Volume
+
+```
+volumes:
+  - name: app-config-vol
+    configMap:
+      name: app-config
+```
