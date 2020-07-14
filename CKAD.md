@@ -496,3 +496,25 @@ spec:
      name: sidecar
      command: ["sleep", "5000"]
 ```
+- Now try to run the below command in the pod to set the date. If the security capability was added correctly, it should work. If it doesn't make sure you changed the user back to root `date -s '19 APR 2012 11:14:00`
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper
+  namespace: default
+spec:
+  containers:
+  - command:
+    - sleep
+    - "4800"
+    image: ubuntu
+    imagePullPolicy: Always
+    command: ["date"]
+    args: ["-s", "19 APR 2012 11:14:00"]
+    name: ubuntu
+    securityContext:
+      capabilities:
+         add: ["SYS_TIME"]
+```
