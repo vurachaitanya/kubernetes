@@ -389,3 +389,27 @@ data:
    DB_User: adef3b32$
    DB_Password: e3g33vw3-
 ```
+### Ways of declaring them :
+
+- ENV
+```
+envFrom:
+   - secretRef:
+       name: app-config
+ ```
+ - Single Env:
+ ```
+ env:
+    - name: DB_Password
+      valueFrom:
+         secretKeyRef:
+            name: app-secret
+            key: DB_Password
+ ```
+ - Volume: Inside the volume files/volumes are created ls /opt/app-secret-volumes if 3 valuse are defined 3 volumes are mounted
+ ```
+ volumes:
+ - name: app-secret-volume
+   secret:
+      secretName: app-secret
+ ```
