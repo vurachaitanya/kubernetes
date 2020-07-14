@@ -413,3 +413,11 @@ envFrom:
    secret:
       secretName: app-secret
  ```
+- Also the way kubernetes handles secrets. Such as:
+
+    * A secret is only sent to a node if a pod on that node requires it.
+    * Kubelet stores the secret into a tmpfs so that the secret is not written to disk storage.
+    * Once the Pod that depends on the secret is deleted, kubelet will delete its local copy of the secret data as well.
+    * Read about the protections and risks of using secrets here
+
+- Other better ways of handling sensitive data like passwords in Kubernetes, such as using tools like Helm Secrets, HashiCorp Vault.
