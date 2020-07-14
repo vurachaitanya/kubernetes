@@ -218,3 +218,25 @@ spec:
 
 - Create a pod called httpd using the image httpd:alpine in the default namespace. Next, create a service of type ClusterIP by the same name (httpd). The target port for the service should be 80.
 - Solution:  `kubectl run httpd --image=httpd:alpine --port=80 --expose`
+
+
+### Docker vs K8s 
+-	Docker
+```
+FROM ubuntu
+ENTRYPOINT[“sleep”]
+CMD[“5”]
+```
+-	K8s:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleep-pod
+spec:
+  containers:
+   - name: ubuntu-sleep
+     image: ubuntu-sleep
+       command: [“sleep”]
+       args: [“10”]
+```
