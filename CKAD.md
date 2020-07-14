@@ -441,3 +441,38 @@ metadata:
 net_namespace.h
 utsname.h
 ```
+- Docker by default run as root to avoide security `docker run --user=1001 ubuntu sleep 2000`
+- Docker Capabilities can be added to a container/Docker by `docker run --cap-add MAC_ADMIN ubuntu` and drop by using `docker run --cap-drop KILL ubuntu`
+- Add all privilages by  `docker run --privileged ubuntu`
+
+### Security Context :
+- Container level security Context
+```
+apiVersion: v1
+kind: Pod
+metadata:
+   name: web-pod
+spec:
+  containers: 
+     - name: ubuntu
+       image: ubuntu
+       command: ["sleep", "3600"]
+       securityContext:
+         runAsUser: 1000
+         capabilities:
+            add: ["MAC_ADMIN"]
+```
+- Pod level security Context
+```
+apiVersion: v1
+kind: Pod
+metadata:
+   name: web-pod
+spec:
+  securityContext:
+     runAsUser: 1000
+  containers: 
+     - name: ubuntu
+       image: ubuntu
+       command: ["sleep", "3600"]    
+```
