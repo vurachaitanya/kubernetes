@@ -413,6 +413,19 @@ envFrom:
    secret:
       secretName: app-secret
  ```
+ ```
+ #kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root  --from-literal=DB_Password=password123 --dry-run=client -o yaml
+------OUTPUT---------
+apiVersion: v1
+data:
+  DB_Host: c3FsMDE=
+  DB_Password: cGFzc3dvcmQxMjM=
+  DB_User: cm9vdA==
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: db-secret
+ ```
 - Also the way kubernetes handles secrets. Such as:
 
     * A secret is only sent to a node if a pod on that node requires it.
@@ -421,3 +434,10 @@ envFrom:
     * Read about the protections and risks of using secrets here
 
 - Other better ways of handling sensitive data like passwords in Kubernetes, such as using tools like Helm Secrets, HashiCorp Vault.
+
+- All the capability of OS are defined in `ls -l /usr/include/linux` and few are used by Dockers/Containers:
+```
+# ls|grep name
+net_namespace.h
+utsname.h
+```
