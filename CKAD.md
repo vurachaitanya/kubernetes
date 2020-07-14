@@ -361,3 +361,31 @@ data:
  - kubectl create -f secret-data.yml to create Secret from Declarative mode
 `echo -n “mysql”|base64`
 `echo -n “bXlzcWw=”|base64 --decode`
+
+### Sample  Secret used in pod file:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+   name: sample-webapp-color
+   labels:
+      name: sample-webapp-color
+spec:
+  containers:
+    - name: sample-webapp-color
+      image: sample-webapp-color
+      ports:
+        - containerPort: 8080
+      envFrom:
+        - secretRef:
+            name: app-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+data:
+   DB_Host: bXlzcWw=
+   DB_User: adef3b32$
+   DB_Password: e3g33vw3-
+```
