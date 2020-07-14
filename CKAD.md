@@ -338,3 +338,26 @@ spec:
       image: kodekloud/webapp-color
       name: webapp-color
 ```
+
+### Secrets :
+
+- Imperative:
+ `Kubectl create secret generic app-secret –from-literal=DB_Host=mysql –from-literal=DB_User=root –from-literal=DB_Password=passwd`
+ 
+- From filelocation:
+`Kubectl create secret generic app-secret –from-file=app_secret.properties`
+
+- Declarative :
+```
+apiVersion: v1
+kind: Secret
+metadata:
+   name: app-secret
+data: 
+   DB_Host: mysql
+   DB_User: root
+   DB_Password: paswrd
+```
+ - kubectl create -f secret-data.yml to create Secret from Declarative mode
+`echo -n “mysql”|base64`
+`echo -n “bXlzcWw=”|base64 --decode`
