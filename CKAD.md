@@ -650,6 +650,33 @@ spec:
       cpu: 0.5
     type: Container
 ```
+- create stress vm which will have memory issues while creating the pods if mem=10Mi
+```
+apiVersion: v1
+kind: Pod
+metadata:
+    name: elephant
+    namespace: default
+  spec:
+    containers:
+    - args:
+      - --vm
+      - "1"
+      - --vm-bytes
+      - 15M
+      - --vm-hang
+      - "1"
+      command:
+      - stress
+      image: polinux/stress
+      imagePullPolicy: Always
+      name: mem-stress
+      resources:
+        limits:
+          memory: 20Mi
+        requests:
+          memory: 5Mi
+```
 
 ## Exam prep:
 
