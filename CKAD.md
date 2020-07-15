@@ -657,7 +657,7 @@ kind: Pod
 metadata:
     name: elephant
     namespace: default
-  spec:
+spec:
     containers:
     - args:
       - --vm
