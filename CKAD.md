@@ -518,3 +518,83 @@ spec:
       capabilities:
          add: ["SYS_TIME"]
 ```
+### Serviceaccounts: 
+- Creating SA using below command:
+
+` kubectl create serviceaccount dashboard-sa`
+- to display SA
+` k get serviceaccount`
+- Details about SA
+`k describe sa dashboard-sa`
+- Secrets about SA:
+`k describe secret dashboard-sa-token-kbbda`
+- Curl command to get the k8s details
+```
+curl https://192.168.1.2:6443/api -nosecure --header “Authorization: Bearer x34ve>4fv”
+K describe pod xxxx|grep secrets  (Volume is mounted as secrets for accessin the pods)
+```
+```
+Spec:
+  serviceAccount: dashboard-sa  -----> For pod to use SA rather than using default SA
+  automountServiceAccountToken: false -----> not to use default SA token 
+```
+
+```
+master $ cat dashboard-sa-role-binding.yaml
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: default
+subjects:- kind: ServiceAccount
+  name: dashboard-sa # Name is case sensitive
+  namespace: default
+roleRef:
+  kind: Role #this must be Role or ClusterRole
+  name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+```
+
+```
+master $ cat pod-reader-role.yaml
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - get
+  - watch
+  - list
+```
+
+
+## Exam prep:
+
+[kubectl command reff](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#expose)
+- set the alias k=kubectl so as to save time.
+
+```
+
+kubectl config set-context mycontext –namespace=mynamespace  ----> set the default namespace so as to not sepcify -n <namespace>
+kubectl explain cronjob.spec.jobTemplate –recursive -----> examples of cronjob syntax / Templates
+
+kubectl run nginx --image=nginx   (deployment)
+kubectl run nginx --image=nginx --restart=Never   (pod)
+kubectl run nginx --image=nginx --restart=OnFailure   (job)  
+kubectl run nginx --image=nginx  --restart=OnFailure --schedule="* * * * *" (cronJob)
+
+kubectl run nginx -image=nginx --restart=Never --port=80 --namespace=myname --command --serviceaccount=mysa1 --env=HOSTNAME=local --labels=bu=finance,env=dev  --requests='cpu=100m,memory=256Mi' --limits='cpu=200m,memory=512Mi' --dry-run -o yaml - /bin/sh -c 'echo hello world'
+
+kubectl run frontend --replicas=2 --labels=run=load-balancer-example --image=busybox  --port=8080
+kubectl expose deployment frontend --type=NodePort --name=frontend-service --port=6262 --target-port=8080
+kubectl set serviceaccount deployment frontend myuser
+kubectl create service clusterip my-cs --tcp=5678:8080 --dry-run -o yaml
+```
