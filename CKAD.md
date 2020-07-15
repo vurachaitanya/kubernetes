@@ -701,3 +701,29 @@ kubectl set serviceaccount deployment frontend myuser
 kubectl create service clusterip my-cs --tcp=5678:8080 --dry-run -o yaml
 ```
 
+## Taints & tolerations: 
+`k taint nodes node-name key=value:taint-effect`
+- Taints are applyed to a node
+- Tolerations applyed to pods
+- taint-effect:
+  * NoSchedule – No Pods are scheduled on this node
+  * PreferNoSchedule – Will try not to scheduled on to this node
+  * NoExecute – Existing pods will be evacuated if it is not tolerant 
+
+`EX: k taint node node1 app=blue:NoSchedule`
+
+```
+apiVersion: v1
+kind: Pod
+metatadata:
+  name: myapp-pod
+spec: 
+  containers:
+- name: nginx-container
+  image: nginx
+  tolerations:
+     - key: “app”
+       operator: “Equal”
+       value: “blue “
+       effect:”NoSchedule”
+```
