@@ -727,3 +727,70 @@ spec:
        value: “blue “
        effect:”NoSchedule”
 ```
+
+### Node Selector:
+
+- Labels the node and based on the node label the pod should be deployed.
+
+`k label node node01 size=Large`
+
+- Node selector based on the Labels of the node
+
+
+```
+apiVersion: v1
+kind: Pod
+metadata: 
+   name: nodeSelector
+spec:
+  containers:
+     - name: sampleNodeSelector
+	   image: nginex
+  nodeSelector:
+      size: Large
+```
+
+### Node Affinity:
+
+- Node selector can't be used if size != or in Medium/Small etc
+- So more operatoers can be used in Node Affinity
+```
+apiVersion: v1
+kind: Pod
+metadata: 
+   name: nodeSelector
+spec:
+  containers:
+     - name: sampleNodeSelector
+	   image: nginex
+  affinity:
+    nodeAffinity:
+	  requiredDuringSchedulingIgnoredDuringExecution:
+	    nodeSelectorTerms:
+		  - matchExpressions:
+		    - key: Size
+			  operator: In
+			  values:
+			  - Large
+			  - Medium
+			  
+			  
+			  - key: Size
+			    operator: NotIn
+				values:
+				 - Small
+				 
+			  - key: Size
+			    operator: Exists
+```
+
+### Types of Node Affinity:
+
+- Available:
+   * requiredDuringSchedulingIgnoredDuringExecution
+   * preferredDuringSchedulingIgnoredDuringExecution
+- Planned: (Will move the pods/ Pod evection, if the label is removed at later part)
+   * requiredDuringSchedulingRequiredDuringExecution
+   
+- During Scheduling
+- During Execution
