@@ -882,3 +882,10 @@ spec:
               - key: node-role.kubernetes.io/master
                 operator: Exists
 ```
+### Exam Tips: 
+
+- [Linkedin](https://www.linkedin.com/pulse/my-ckad-exam-experience-atharva-chauthaiwale/)
+
+- [Medium](https://medium.com/@harioverhere/ckad-certified-kubernetes-application-developer-my-journey-3afb0901014)
+
+- [Git](https://github.com/lucassha/CKAD-resources)
