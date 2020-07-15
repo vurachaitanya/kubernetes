@@ -576,6 +576,46 @@ rules:
 ```
 
 
+## Resources Limits:
+
+### Cpu : 
+-	1m (0.1 milli cores ) is the min 
+-	1 (1000 Milli Cores) equal to AWS vCPU, 1 GCP core, 1 Azure Core, 1 Hyperthread
+
+### Memory: 
+-	256 Mi
+-	24534343
+-	1G
+-	Units for Memory:
+-	1 G(GigaByte) = 1,000,000,000 bytes
+-	1M(Megabyte)= 1,000,000 bytes
+-	1K(Kilobyte) = 1,000 bytes
+-	1 Gi(Gibibyte) = 1,073,741,824 bytes
+-	1 Mi(Mebibyte) = 1,048,576 bytes
+-	1 Ki(kibibyte) = 1024 bytes
+
+```
+apiVersion: v1
+kind: Pod
+metadata: 
+   name: webapp-color
+   labels:
+      name: webapp-color
+spec:
+   containers:
+   - name: webapp-color
+     image:  simple-webapp-color
+     ports:
+     - containerPorts: 8080
+     resources:
+       requests:
+         memory: “1Gi”
+         cpu: 1
+       limits:
+         memory: “2Gi”
+         cpu: 2
+```
+
 ## Exam prep:
 
 [kubectl command reff](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#expose)
