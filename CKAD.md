@@ -794,3 +794,91 @@ spec:
    
 - During Scheduling
 - During Execution
+
+### Label nodes
+`k label node node01 color=blue`
+
+### Node Affinity :
+
+- Set Node Affinity to the deployment to place the PODs on node01 only
+```
+Name: blue
+Replicas: 6
+Image: nginx
+NodeAffinity: requiredDuringSchedulingIgnoredDuringExecution
+Key: color
+values: blue
+```
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: blue
+  name: blue
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: blue
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: blue
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+      affinity:
+        nodeAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+            - matchExpressions:
+                - key: color
+                  operator: In
+                  values:
+                   - blue
+```
+
+- Create a new deployment named 'red' with the NGINX image and 3 replicas, and ensure it gets placed on the master node only.
+   * Use the label - node-role.kubernetes.io/master - set on the master node.
+
+```
+Name: red
+Replicas: 3
+Image: nginx
+NodeAffinity: requiredDuringSchedulingIgnoredDuringExecution
+Key: node-role.kubernetes.io/master
+Use the right operator
+```
+
+```
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: red
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+```
