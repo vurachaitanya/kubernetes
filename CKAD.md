@@ -1117,3 +1117,27 @@ spec:
 		  image: webapp
 ```
 
+### Rolling updates and Rollbacks in deployments :
+- upgrades will done by creating 2 replica sets 1 with old and pulled one at a time and in 2nd replica sets it will create new pods under the deployment.
+   * upgrade --> deployment ---> replicaset 1(pull down one at a time)--->replicaset 2 (up one at a time)
+- Rolling updates and rollback can be done to make sure if upgrade fails, we can  rolleback to previous version.
+- Deployments has got below Strategys:
+   * Recreate : disadvantages all pods would bring down, so application will not be avilable for some time. Replica set will be made to 0 and then pull them up with new image
+   * Rolling Update: helpful to upgrade in rolling fashion which will not impact the customers. Default strategy for deployments. Pods would be pulled one at a time.
+- Deploymentes update can be done to labels, no of replicas, image etc.
+
+
+
+- `k run webapp --image=nginx` will create by default deployments. 
+- `k rollout status deployment/myapp-deployment` Command to check the status of Rolling  upgrades
+- `k rollout history deployment/myapp-deployment` to check history on to the upgrades.
+- `k rollout undo deployment/myapp-deployment` to undo the upgrade.
+- `k apply -f deployment-definition.yml` for upgrade you can change the image information in file and apply it
+- `k set image deployment/myapp-deployment nginx=nginx:1.9.1` to chage the image of deployments on the fly ie command mode.
+
+- Commands:
+   * Create: `k create -f deployment-definition.yml`
+   * Get: `k get deployments`
+   * Update: `k apply -f deployment-definition.yml` & `k set image deployment/myapp-deployment nginx=nginx:1.9.1`
+   * Status: `k rollout status deployment/myapp-deployment` & `k rollout history deployment/myapp-deployment`
+   * Rollback `k rollout undo deployment/myapp-deployment`
