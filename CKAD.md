@@ -1064,3 +1064,56 @@ spec:
 			  - cat
 			  - /app/is_ready.sh
  ```
+
+
+### Kubernetes Logs
+
+- K8s will logs and events using below command & -f will shares the live logs
+` k logs -f <Pod Name>
+
+- If Pod contains 2 or more containers then they need to sepecify the containers information
+
+`K logs -f <Pod Name> <Container Name>`
+
+### Monitoring
+
+- Metrics Server is current greabs pod utilization etc info, Heapster is deprecated
+- Metrics Server stores info in memory.
+- Kubelet has Cadvisor component and sending metrics using kubeapi and resonposible for Metrics of K8s.
+- metrics components should be installed.
+  * `k top node` k top pods` are two commands to check if Metrics is configured and extracting details
+  
+### Labels Selectors and Annotations:
+- Labels to group the objects
+- Selectors to match the labels
+- Annotations for detilas of authoer, version etc. Can be used for Information puerpose only.
+- Sample file:
+
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: webapp
+  labels:
+    app: app1
+	function: Front-end
+  annotations:
+    buildversion: 1.34
+	author: chaitanya
+	email: vurachaitanya@gmail.com
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+	  app: app1
+  template:
+    metadata:
+	  labels:
+	    app: app1
+		function: Front-end
+	spec:
+	  containers:
+	    - name: webapp
+		  image: webapp
+```
+
