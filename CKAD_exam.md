@@ -8,4 +8,5 @@
 - install plugins
 - Primary and Secondary id for id PRoof.
 - Webcam should be available 
+- [Check before Exam](https://trainingportal.linuxfoundation.org/learn/course/certified-kubernetes-application-developer-ckad/exam/exam)
 
