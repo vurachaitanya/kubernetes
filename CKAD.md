@@ -885,7 +885,182 @@ spec:
 ### Exam Tips: 
 
 - [Linkedin](https://www.linkedin.com/pulse/my-ckad-exam-experience-atharva-chauthaiwale/)
-
 - [Medium](https://medium.com/@harioverhere/ckad-certified-kubernetes-application-developer-my-journey-3afb0901014)
-
 - [Git](https://github.com/lucassha/CKAD-resources)
+
+### Multi-Container in pods
+- Types of multi Container
+   * Sidecar
+   * Adapter
+   * Ambassador
+- Sidecar to have same network and volumea across containers. Ex: nginx logs --> long management 
+- Adapter containers dose some logic to convert logs in required format or send database requests based on the envrionments etc.
+- Containers are defined in a list of pod templates so as to add 2 or more containers in a pod.
+
+- Pod creation with volume logs stored in file system.
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    name: app
+  name: app1
+  namespace: elastic-stack
+spec:
+  containers:
+  - image: kodekloud/event-simulator
+    imagePullPolicy: Always
+    name: app
+    volumeMounts:
+    - mountPath: /log
+      name: log-volume
+  volumes:
+  - hostPath:
+      path: /var/log/webapp
+      type: DirectoryOrCreate
+    name: log-volume
+```
+- Edit the pod to add a sidecar container to send logs to ElasticSearch. Mount the log volume to the sidecar container..
+Only add a new container. Do not modify anything else. Use the spec on the right.
+   * Name: app
+   * Container Name: sidecar
+   * Container Image: kodekloud/filebeat-configured
+   * Volume Mount: log-volume
+   * Mount Path: /var/log/event-simulator/
+   * Existing Container Name: app
+   * Existing Container Image: kodekloud/event-simulator
+
+```
+aster $ cat /var/answers/answer-app.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+  namespace: elastic-stack
+  labels:
+    name: app
+spec:
+  containers:
+  - name: app
+    image: kodekloud/event-simulator
+    volumeMounts:
+    - mountPath: /log
+      name: log-volume
+
+  - name: sidecar
+    image: kodekloud/filebeat-configured
+    volumeMounts:
+    - mountPath: /var/log/event-simulator/
+      name: log-volume
+
+  volumes:
+  - name: log-volume
+    hostPath:
+      # directory location on host
+      path: /var/log/webapp
+      # this field is optional
+      type: DirectoryOrCreate
+```
+
+
+
+### Pod Life cycle:
+  - Pod Status:
+     * Pending - Scheduler will allocate the nodes (k describe pod <Pod> - details of why it was pending)
+	 * ContainerCreating - Image will be pulled and required resources (mount/ persmission etc)
+	 * Running - Start the containers which required resources.
+	 * Termination - Once the job is completed, container will die
+  - Pod Conditions : (True/False)
+     * PodScheduled - when the pods is scheduled in a node it will  place True
+	 * Initialized - When all the resources of containters are meat it will set to True
+	 * CotainersReady - When all the containers in a pod are ready it will marke as True
+	 * Ready - When all the above are meat then pod shows Ready and marked as True
+  - When the CotainersReady and Pod Ready are set to True and Cotaners will start the traffice. 
+  - Database / Jenkins will take some time to get the application ready, but Pod Status is been set to Ready. Which is False. 
+  #### Readiness Probes:
+  - Types of Readiness probes can create to an application:
+     * HTTP Test : API to check Readyness.
+	 * TCP Test : 3306 socket is open for database connections.
+     * EXEC Command: To check the application readiness.	 
+  - If Readiness is configured, Container will not set the Ready to true, until the Readiness probe is check and available. So that traffice is not passed to the end users.
+  
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-application
+  labels:
+    name: web-application
+spec:
+  containers:
+    - name: web-application
+	  image: web-application
+	  ports:
+	    - containerPort: 8080
+
+
+	  readinessProbe:   ######For HTTP Connection
+        httpGet:
+          path: /api/ready
+          port: 8080
+        initialDelaySeconds: 10  #### Additional Delay before Traffice starts
+		periodSeconds: 5         #### Check every 5 sec for the 3 probe by default
+		failureThreshold: 8      #### To increase the probe from default to 3 to 8
+		
+		
+		
+      readinessProbe:   ######For TCP Socket - DBA
+	      tcpSocket:
+		    port: 3306
+		
+
+		
+	   readinessProbe:    ######For Exec Commands
+	      exec:
+		    command:
+			  - cat
+			  - /app/is_ready.sh
+```
+
+## Liveness Probes:
+ - if in case of docker container exits and dead, the service ineruption to the customers.
+ - In K8s container will be brought up and restart counts to increase.
+ - In few cases if container is up but services is not responding then Configure Liveness probe. then Container should restart/recreate to get services to customers.
+ ```
+ apiVersion: v1
+kind: Pod
+metadata:
+  name: web-application
+  labels:
+    name: web-application
+spec:
+  containers:
+    - name: web-application
+	  image: web-application
+	  ports:
+	    - containerPort: 8080
+
+
+	  livenessProbe:   ######For HTTP Connection
+        httpGet:
+          path: /api/ready
+          port: 8080
+        initialDelaySeconds: 10  #### Additional Delay before Traffice starts
+		periodSeconds: 5         #### Check every 5 sec for the 3 probe by default
+		failureThreshold: 8      #### To increase the probe from default to 3 to 8
+		
+		
+		
+      livenessProbe:   ######For TCP Socket - DBA
+	      tcpSocket:
+		    port: 3306
+		
+
+		
+	   livenessProbe:    ######For Exec Commands
+	      exec:
+		    command:
+			  - cat
+			  - /app/is_ready.sh
+ ```
