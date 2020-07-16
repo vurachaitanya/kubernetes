@@ -1241,4 +1241,25 @@ spec:              #### Cronjob Spec for schedule
 	            command: [ 'expr', '3', '+', '2']
 	          restartPolicy: Never
 ```
+### backoffLimit
+- So that job won't end untill that many attempets were been made. 
 
+```
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: throw-dice-cron-job
+spec:
+  schedule: "30 21 * * *"
+  jobTemplate:
+    spec:
+      completions: 3
+      parallelism: 3
+      backoffLimit: 25 # This is so the job does not quit before it succeeds.
+      template:
+        spec:
+          containers:
+          - name: math-add
+            image: kodekloud/throw-dice
+          restartPolicy: Never
+```
