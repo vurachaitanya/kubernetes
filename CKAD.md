@@ -1157,3 +1157,88 @@ deployment.extensions/nginx with revision #3`
 - Undo a change `kubectl rollout undo deployment nginx`
 - check status `kubectl rollout history deployment nginx`
 - rollback to rev 4 `kubectl rollout history deployment nginx --revision=4`
+
+
+### Jobs
+
+- restartPolicy - always make container up. So that if it is killed on one node it will start on other node because of memory or cpu isues.
+
+```
+#### Example:
+spec:
+  containers:
+    - name: math-add
+	  image: ubuntu
+	  command: [ 'expr', '3', '+', '2']
+  restartPolicy: Always #### Always make sure to bring the pod up even if it is killed because of any issues
+  
+  restartPolicy: Never ####if pod should be exited once the job is completed
+
+``` 
+- For batch related job we can use job which is one time task and exits once job completed
+
+```
+apiVersion: batch/v1
+kind: Jobs
+metadata:
+  name: math-add-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: math-add
+	      image: ubuntu
+	      command: [ 'expr', '3', '+', '2']
+	  restartPolicy: Never
+```
+- `k create -f job-defination.yaml` Create the above job
+- `k get jobs` list the jobs
+- `k get pods` list the pods of the job
+- `k logs match-add-job-x353` to check the job output
+- `k delete jo math-add-job` to delete the job.
+
+### Parallelism: 
+
+- to start the pods all at once so that no delay in creation of pods.
+
+```
+apiVersion: batch/v1
+kind: Jobs
+metadata:
+  name: math-add-job
+spec:
+  completions: 3   ###to make sure always we have 3 jobs created but one after the other
+  parallelism: 3   ### to create all 3 pods at once with out any delay.
+  template:
+    spec:
+      containers:
+        - name: math-add
+	      image: ubuntu
+	      command: [ 'expr', '3', '+', '2']
+	  restartPolicy: Never
+```
+
+## Cron job :
+- Schedule the jobs for a frequency 
+- `k get cronjob` will list the jobs
+
+```
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: reporting-cron-job
+spec:              #### Cronjob Spec for schedule
+  schedule: "*/1 * * * *"
+  jobTemplate: 
+	    spec:           ### Job spec 
+          completions: 3 
+          parallelism: 3
+          template:
+		    spec:     ##### Spec for container job
+              containers:
+              - name: math-add
+	            image: ubuntu
+	            command: [ 'expr', '3', '+', '2']
+	          restartPolicy: Never
+```
+
