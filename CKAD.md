@@ -1141,3 +1141,19 @@ spec:
    * Update: `k apply -f deployment-definition.yml` & `k set image deployment/myapp-deployment nginx=nginx:1.9.1`
    * Status: `k rollout status deployment/myapp-deployment` & `k rollout history deployment/myapp-deployment`
    * Rollback `k rollout undo deployment/myapp-deployment`
+
+- Change-Cause to understand what is been changed. --record will add the entry to change cause filed so that it would be easy for us to track what has been made changes in the deployments.
+
+
+- Create deployment: `kubectl create deployment nginx --image=nginx:1.16`
+- Check the status `kubectl rollout status deployment nginx`
+- Check the status `kubectl rollout history deployment nginx` 
+- Roleback `kubectl rollout history deployment nginx --revision=1`
+- Mark the command which caused the roleout `kubectl set image deployment nginx nginx=nginx:1.17 --record`
+- Check the status ` kubectl rollout history deployment nginx`
+- Editing the deployment and changing the image from nginx:1.17 to nginx:latest while making use of the --record flag.`kubectl edit deployments. nginx --record`
+- Rollingback `kubectl rollout history deployment nginx --revision=3
+deployment.extensions/nginx with revision #3`
+- Undo a change `kubectl rollout undo deployment nginx`
+- check status `kubectl rollout history deployment nginx`
+- rollback to rev 4 `kubectl rollout history deployment nginx --revision=4`
