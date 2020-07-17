@@ -1494,6 +1494,104 @@ spec:
 [Ingress Examples](https://kubernetes.github.io/ingress-nginx/examples/)
 [Ingress replace ](https://www.udemy.com/course/certified-kubernetes-application-developer/learn/lecture/16716434#announcements)
 
+- examples ingress Controller, Service account, configmap, Services 
+
+```
+master $ cat ingress-controller.yaml
+---
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-controller
+  namespace: ingress-space
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx-ingress
+  template:
+    metadata:
+      labels:
+        name: nginx-ingress
+    spec:
+      serviceAccountName: ingress-serviceaccount
+      containers:
+        - name: nginx-ingress-controller
+          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+          args:
+            - /nginx-ingress-controller
+            - --configmap=$(POD_NAMESPACE)/nginx-configuration
+            - --default-backend-service=app-space/default-http-backend
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+master $
+```
+- Ingress Services:
+
+```
+ cat ingress-service.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress
+  namespace: ingress-space
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    nodePort: 30080
+    name: http
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+  selector:
+    name: nginx-ingress
+```
+
+- Ingress resources:
+
+```
+cat ingress-resource.yaml
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-wear-watch
+  namespace: app-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /wear
+        backend:
+          serviceName: wear-service
+          servicePort: 8080
+      - path: /watch
+        backend:
+          serviceName: video-service
+          servicePort: 8080
+```
+- `kubectl expose deployment -n ingress-space ingress-controller --type=NodePort --port=80 --name=ingress --dry-run -o yaml >ingress.yaml` To expose the Ingress Services.
 
 ```
 apiVersion: extensions/v1beta1
@@ -1665,3 +1763,145 @@ spec:
     - port: 53
       protocol: TCP
 ```
+
+- `k get all --all-namespaces` command to view all resources of pods, deplyments, services, replicasets etc.
+
+### Volume & Mounts
+- As K8s supports the volume as conainer will not store the data 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: random-number-generator
+spec:
+  containers:
+    - name: alpine
+	  image: alpine
+	  command: ["/bin/sh","-c"]
+	  args: ["shuf -i 0-100 -n 1 >> /opt/number.out;"]
+	  volumeMounts:
+	    - mountPath: /opt
+		  name: data-volume
+  volumes:
+     - name: data-volume
+	   hostPath:              #####Host Path Where local host mount path has been used.
+	     path: /data
+		 type: Directory
+  
+  
+  volumes:                  ####AWS Elastic Store as K8s Volume for a pod
+    - name: data-volume
+	  awsElasticBlockStore:
+	    volumeID: <Volume-id>
+		fsType: ext4
+		 
+```
+
+### Persistance Volume:
+- Persistance Volume are cluster wide Pool of storage where pods can be used a peace of volume as a storage.
+- PVC - Persistent Volume Claim ()
+- PV - Persistent Volume (Pice of storage device from a pool of storages)
+
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-vol1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+	
+  hostPath:
+    path: /tmp/data
+	
+	
+  awsElasticBlockStore:
+    volumeID: <Volume-id>
+	fsType: ext4
+```
+- `k get persistentvolume` get the status of the volume
+
+### Persistent Volume Claim:
+
+- From storage pool Admin team create PV and Developer will create PVC to use them in the  pods. 
+- once PVC is created K8s binds the PV's with PVC's 
+- Every PV is bind to single PVC in bind process
+- In Bind process it check requested properties Sufficient Capacity, Access Modes, Volume Modes, Storage Class, Selector
+- If all the labels are match and PV has more storage and there is no storage option are left then PVC will bind with more capacity storage.  We can't use rest of the volume with other PVC's. 
+- If PVC dose not matches with available PV's then it would be in pending state. 
+
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+	  storage: 500Mi
+```
+
+- `k get pvc` to get the persistent Volume Claims
+- `k delete pvc myclaim` will delete PVC
+- By default once the PVC is deleted PV remains as is untill it is deleted by K8s admin and PV can't be reused by any PVC.
+- `persistentVolumeReclaimPolicy: Retain` is set by default and should be specified with `persistentVolumeReclaimPolicy: Delete` will delete both PVC and PV. 
+- `persistentVolumeReclaimPolicy: Recycle` this will delete the data on the volume and ready to reused by other Pods.
+- Once you create a PVC use it in a POD definition file by specifying the PVC Claim name under persistentVolumeClaim section in the volumes section.
+- The same is true for ReplicaSets or Deployments. Add this to the pod template section of a Deployment on ReplicaSet.
+
+[Volume Claims](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#claims-as-volumes)
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: myclaim
+```
+
+### Storage Class:
+  - Based on the cost we can prepare platinum: Flash drives, Gold: SSD, Silver: Magnetic drivers.
+  - Static Provisioning
+  - Dynamic provisioning - Storage Class :  Automatic provision 
+  - Using API's GCP will automatically provision the storage ie pv
+  
+```
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: google-storage
+  
+provisioner: kubernetes.io/gce-pd
+
+```
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: google-storage
+  resources:
+    requests:
+	  storage: 500Mi
+```
+
