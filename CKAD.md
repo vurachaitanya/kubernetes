@@ -1326,3 +1326,234 @@ spec:
     app: myapp
 	type: front-end
 ```
+
+
+### Ingress Networking
+- Ingress enables customers to use different pages based on pods.
+   * google.com ---> google.com/mail & google.com/voice & google.com/youtube
+   * SSL Security ask well
+   * Based on path route the traffic to respetive services ie mail to mail-deployments of 6 pods.
+   * Ingress is LAYER 7 build in K8s feature
+   * Even after using Ingress we need to have Node port to expose the URL
+- Ingress Components:
+   * Ingress Resource
+   * Ingress Resource - Rules
+   * Ingress Controller  (Uses Nginx, Istio etc)
+- Legacy way of using app if Ingress is not present
+   * service using cluster ip and port http://129.132.124.124:30054
+   * Add DNS to have ip to hostname mapping so as to use http://mystore.com:30054
+   * Add Proxy in between to remove the port numbers so as to route the traffice Proxy 30054:80
+   * Final version http://mystore.com 
+   * If you are using Load Balancer you need to pay for each like http://mystore.com:32342/ware & http://mystore.com:30054/videos if both are comming from different deployments and services. Which is costly.
+   * SSL should be enabled to use https://mystore.com.
+- To avoide above steps and create multiple sub domains and paths in webpages we can achieve it from Ingress resources - Rules and Ingress controllers. 
+
+- Ingress still requires one node port to expose the application.
+- Ingress --> Deploy using (Nginx reverse proxy, HAProxy, traefik, Istio, Contour, GCP HTTP(S)/Load Balancer(GCE))
+- Congure ---> SSL Certficate, URL Routes etc 
+- Ingress Controller & Ingress Resources 
+- CNCF Supported Ingress Controller are Nginx & GCP/GCE
+
+### Ingress Controller:
+- Ingress Controller configuration 
+
+```
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-ingress-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+	  name: nginx-ingress-controller   
+  template:
+    metadata:
+	  labels:
+	    name: nginx-ingress
+    spec:
+	  containers:
+	    - name: nginx-ingress-controller
+		  image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+	  args:
+	    - /nginx-ingress-controller
+		-  --configmap=$(POD_NAMESPACE)/nginx-configuration
+	  env:
+	    - name: POD_NAME
+		  valueFrom:
+		    fieldRef:
+			  fieldPath: metadata.name
+	    - name: POD_NAMESPACE
+		  valueFrom:
+		    fieldRef:
+			  fieldPath: metadata.namespace
+	  ports:
+	    - name: http
+		  containerPort: 80
+		- name: https
+		  containerPort: 443
+```
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ingress
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+	  targetPort: 80
+	  protocal: TCP
+	  name: http
+	- port: 443
+	  targetPort: 443
+	  protocal: TCP
+	  name: https
+  selector:
+    name: nginx-ingress
+```
+- Service account with required Roles ClusterRoles and RoleBindings should be allocated.
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx-ingress-serviceaccount
+  
+```
+- Configmap to add logs location err redirection etc
+
+```
+kind: ConfigMap
+apiVersion: v1beta1
+metadata:
+  name: nginx-configuration
+```
+
+### Ingress Resource:
+
+- Creating Ingress Resources for a service.
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-wear
+spec:
+  backend:
+    serviceName: wear-service
+	servicePort: 80
+```
+- Command to check the ingress status `k get ingress`
+  * Shows ingress name Host the traffice should be passed to and address and ports
+- Ingress Resources for a service with Path and Rules defined.
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-wear-watch
+spec:
+  rules:
+   - http:
+     paths:
+	   - path: /wear
+	     backend:
+		   serviceName: wear-service
+		   servicePort: 80
+	   - path: /watch
+	     backend:
+		   serviceName: watch-service
+		   servicePort:80
+		   
+```
+- `k describe ingress ingress-wear-watch` will list the Rules, path, service and port information.
+
+- Domain / Host based Ingress :
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-wear-watch
+spec:
+  rules:
+   - host: wear.my-online-store.com
+      http:
+       paths:
+	   - backend:
+		   serviceName: wear-service
+		   servicePort: 80
+	- host: watch.my-online-store.com
+	  http:
+	    paths:
+	     - backend:
+		     serviceName: watch-service
+		     servicePort: 80
+		   
+```
+[Ingress Examples](https://kubernetes.github.io/ingress-nginx/examples/)
+[Ingress replace ](https://www.udemy.com/course/certified-kubernetes-application-developer/learn/lecture/16716434#announcements)
+
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+  namespace: critical-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /pay
+        backend:
+          serviceName: pay-service
+          servicePort: 8282
+
+```
+
+```
+replace("/something(/|$)(.*)", "/$2")
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: rewrite
+  namespace: default
+spec:
+  rules:
+  - host: rewrite.bar.com
+    http:
+      paths:
+      - backend:
+          serviceName: http-svc
+          servicePort: 80
+        path: /something(/|$)(.*)
+
+```
+- sample ingress :
+
+```
+master $ cat ingress-pay.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+  namespace: critical-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /pay
+        backend:
+          serviceName: pay-service
+          servicePort: 8282
+```
+
+[Rewrite ingress example](https://kubernetes.github.io/ingress-nginx/examples/rewrite/)
