@@ -1263,3 +1263,66 @@ spec:
             image: kodekloud/throw-dice
           restartPolicy: Never
 ```
+
+### Services:
+   - Connection between services of pods.
+   - Frontend to end users.
+   - external datasources.
+   - loosly copuled services
+   - Pod ip and Node ip are of different ip. So only services are available internal to the node. To expose it to the user need to use Services.
+   - pod ip (10.244.0.2) -->service (30008)-->using Node port ip (192.168.1.2) 
+   - Types of Services:
+      * Node port
+	  * Cluster Port
+	  * Loadbalencer Exteral
+	- Ports:
+	  * TartPort(80) ---> Pod IP: 10.244.0.2
+	  * Port(80) ---> Service IP: 10.106.1.12
+	  * Node port(30008) ----> Node Service port
+	- node pods Range: 30000 - 32767
+
+- Example:
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 80  ###Pod port ## IF NOT GIVEN USES PORT INFO
+	  port: 80        ###Service port ## MUST REQUIRED
+	  nodePort: 30008 ### K8s or Node port ##IF NOT GIVEN USES DEFAULT AVILABLE RANGE PORT
+  selector:
+      app: myapp
+      type: front-end	  
+```
+- `k get services` gives us the services avilable.
+- curl http://192.168.1.2:30008
+- For multiple pods should have same labels. Service is created using selector and uses same lable to enable the port across the nodes.
+- Uses Random algorithum to select the pods
+- SessionAffinity is by default enabled.
+- Service is spanned across the nodes based on the pods deployned on nodes.
+
+
+### ClusterIP
+- Full stack app (Fron-end, Back-End, Redis)
+- If type is not mentioned, default is ClusterIP.
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 80
+	  port: 80
+  selector:
+    app: myapp
+	type: front-end
+```
