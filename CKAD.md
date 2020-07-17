@@ -1557,3 +1557,111 @@ spec:
 ```
 
 [Rewrite ingress example](https://kubernetes.github.io/ingress-nginx/examples/rewrite/)
+
+
+### Network Policy
+
+- To allow specific traffice to the pod from other pods/ apps
+- By default "Allow All" is the Network policy for all the pods, so that no restrection to pod to pod communication and node to pod communication.
+- Network policy supported by CNI's are Kube-Router, Calico, Romana, Weave-net.
+- Network policy Not suppoted by Flannel.
+
+
+### Ingress
+
+```
+aster $ cat netpol.yml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal-policy
+  namespace: default
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          name: payroll
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: payroll
+  policyTypes:
+  - Egress
+```
+
+
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-policy
+spec:
+  podSelector:
+    matchLabels:
+	  role: db
+  policyType:
+   - Ingress
+  ingress:
+   - from:
+    - podSelector:
+	  matchLabels:
+	    name: api-pod
+	 ports:
+	  - protocal: TCP
+	    port: 3306
+
+```
+
+- Create a network policy to allow traffic from the 'Internal' application only to the 'payroll-service' and 'db-service'
+Policy Name: internal-policy
+Policy Types: Egress
+Egress Allow: payroll
+Payroll Port: 8080
+Egress Allow: mysql
+MYSQL Port: 3306
+
+### Egress
+
+
+```
+cat answer-internal-policy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      name: internal
+  policyTypes:
+  - Egress
+  - Ingress
+  ingress:
+    - {}
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          name: mysql
+    ports:
+    - protocol: TCP
+      port: 3306
+
+  - to:
+    - podSelector:
+        matchLabels:
+          name: payroll
+    ports:
+    - protocol: TCP
+      port: 8080
+
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+```
