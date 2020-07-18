@@ -16,3 +16,6 @@
 - alias ctc='export KUBECONFIG=/root/kc/CTC/.kube/config;export CLU=CTC'
 - Set the default namespace kubectl config set-context $(kubectl config current-context) --namespace=dev
 - kubectl explain pod --recursive|more
+- k run webapp --image=nginx --labels="tier=frontend" --replicas=2
+- k expose deployment webapp --name=frontend --type=Nodeport --target-port=80 --port=80 --dry-run -o yaml
+- k get pod testpod -o yaml --export -----will give basic yaml file
