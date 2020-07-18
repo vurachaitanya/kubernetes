@@ -12,4 +12,6 @@
 
 - https://kubernetes.io/docs/, https://github.com/kubernetes/,  https://kubernetes.io/blog/ are accessed
 - https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
-
+- sudo -i for admin commands
+- alias ctc='export KUBECONFIG=/root/kc/CTC/.kube/config;export CLU=CTC'
+- 
