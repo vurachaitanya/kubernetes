@@ -1983,4 +1983,58 @@ spec:
 	  emptyDir: {}
 ```
 
+### Prep questions:
+- We have deployed a few pods in this cluster in various namespaces. Inspect them and identify the pod which is not in a Ready state. Troubleshoot and fix the issue.
+  * Next, add a check to restart the container on the same pod if the command ls /var/www/html/file_check fails. This check should start after a delay of 10 seconds and run every 60 seconds.
+  * You may delete and recreate the object. Ignore the warnings from the probe. 
+
+```
+master $ cat delaypod
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: dev-pod-dind-878516
+  name: dev-pod-dind-878516
+  namespace: default
+spec:
+  containers:
+  - image: nginx
+    imagePullPolicy: Always
+    name: engine-x
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-br8pv
+      readOnly: true
+  - command:
+    - sleep
+    - "3600"
+    image: ubuntu
+    imagePullPolicy: Always
+    name: agent-x
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+  - image: kodekloud/event-simulator
+    imagePullPolicy: Always
+    name: log-x
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-br8pv
+      readOnly: true
+    readinessProbe:
+      exec:
+        command:
+        - ls
+        - /var/www/html/file_check
+      initialDelaySeconds: 10
+      periodSeconds: 60
+```
+
 
