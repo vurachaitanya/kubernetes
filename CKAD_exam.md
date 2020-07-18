@@ -14,4 +14,4 @@
 - https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 - sudo -i for admin commands
 - alias ctc='export KUBECONFIG=/root/kc/CTC/.kube/config;export CLU=CTC'
-- 
+- Set the default namespace kubectl config set-context $(kubectl config current-context) --namespace=dev
