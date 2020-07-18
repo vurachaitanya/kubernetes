@@ -15,6 +15,8 @@ Filters according to a set of values. The operators are in, notin, and exists. F
 - [Google Borg K8s podcast voice](https://www.gcppodcast.com/post/episode-46-borg-and-k8s-with-john-wilkes/)
 - [First StackOverflow update by me](https://stackoverflow.com/questions/56800733/openshift-3-11-edit-deployment-config-cant-add-command/62865744#62865744)
 
+- `kubectl expose deployment redis --port=6379 --name messaging-service --namespace marketing` expose services for a deployment.
+
 ### Sample ReplicationController yml file
 ```
 apiVersion: v1
