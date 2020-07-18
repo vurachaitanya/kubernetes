@@ -1904,4 +1904,83 @@ spec:
     requests:
 	  storage: 500Mi
 ```
+### Exap pre practice test:
+- https://kodekloud.com/courses/kubernetes-certification-course-labs/lectures/14244589
+
+```
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: logger
+spec:
+  containers:
+    - name: logger
+	  image: nginx:alpine
+	  volumeMounts:
+	   - name: logger
+	     mountPath: /log
+  volume:
+    - name: log-claim
+	  persistenceVolumClass:
+	    claimname: log-claim
+```
+```
+k exec -it webapp-color -- sh
+nc -z -v secure-service 80
+nc -z -v -w l secure-service 80 ### Says logs about the error
+```
+
+```
+k get netpol ingress-deny --dry-run=client -o yaml >> ingress-webapp-color.yml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata
+  name: allow-webapp-color
+spec:
+  podSelector:
+    matchLabels:
+	  run: secure-pod  ####to which Netpol should apply for
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+	  - podSelector:
+	     matchLabels:
+		   name: webapp-color  ### To which netpolicy should allowed traffic to access secure-pod
+      ports:
+	   - protocal: TCP
+	     port:80
+```
+
+```
+
+k -n dvl1987 create configmap time-config --from-literal=TIME_FREQ=10
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: timecheck
+  namespace: dvl1987
+spec:
+  containers:
+    - name: timecheck
+	  image: busybox
+  env:
+    - name: timefreq
+	  valumeFrom:
+	    configMapKeyRef:
+		  name: time-config ### Configmap which is already created with variable.
+		  key: TIME_FREQ
+  command: ["/bin/bash", "-c", "while truel do date; sleep $TIME_FREQ; done >/opt/time/timestatus.log]
+  volumeMounts:
+    - mountPaths:
+	  name: a-volume
+  volumes:
+    - name: a-volume
+	  emptyDir: {}
+```
+
 
