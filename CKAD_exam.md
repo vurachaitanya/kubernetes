@@ -20,3 +20,29 @@
 - k expose deployment webapp --name=frontend --type=Nodeport --target-port=80 --port=80 --dry-run -o yaml
 - k get pod testpod -o yaml --export -----will give basic yaml file
 -  k explain pv --recursive|grep -A5 hostPath
+
+### Pod
+- apiVersion sholud be v1 and kind should be Pod.
+- Containers may have more than one hence those should be mentioned as lists
+- Metadata are dic
+- k run <pod name> --image=nginex:1.16 
+- Syntax : kubectl run NAME --image=imge [--env="key=value"] [--port=port] [--dry-run=server|client] [--overrides=inline-json]
+[--command] -- [COMMAND] [args...] [options]
+- k explain pod --recursive will get more details.
+- k run --help 
+- kubectl create -f ./pod.json
+  
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: firstpod
+  labels:
+     app: firstapp
+     type: frontend
+spec:
+  containers: 
+    - name: firstcontainer
+      image: nginx
+```
