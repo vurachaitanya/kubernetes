@@ -19,3 +19,4 @@
 - k run webapp --image=nginx --labels="tier=frontend" --replicas=2
 - k expose deployment webapp --name=frontend --type=Nodeport --target-port=80 --port=80 --dry-run -o yaml
 - k get pod testpod -o yaml --export -----will give basic yaml file
+-  k explain pv --recursive|grep -A5 hostPath
