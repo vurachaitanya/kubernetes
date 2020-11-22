@@ -48,3 +48,58 @@ spec:
     - name: firstcontainer
       image: nginx
 ```
+
+## ReplicationController:
+
+- For each teamplate of pod label is required and matchlabel is optional
+
+```
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: samplers
+spec:
+  template:
+    metadata:
+      name: rc-pod 
+      labels: ## selector is take by default if not specified also need to give labels in pod defination
+        app: test
+    spec:
+      containers:
+       - name: rc-container
+         image: nginx
+  replicas: 3
+
+```
+
+## ReplicaSet:
+
+- Diff b/w replicationcontroller vs replicaset are
+   * Need to have matchLable must for replicaset
+   * replicationcontroller apiVersion: v1 & replicaSet apiVersion = apps/v1
+- Scaling pods in replicaSet
+   * update the configfile with desired replicas and use ` k replace -f <config file>`
+   * same file with replicas in command line  `k scale --replicas=6 -f <Config file>`
+   * commandline `k scale --replicas=6 replicaset <replicaset name>`
+   
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: samplers
+spec:
+  template:
+    metadata:
+      name: rs-pod
+      labels:
+        app: test1
+    spec:
+      containers:
+       - name: rc-container
+         image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test1
+
+```
