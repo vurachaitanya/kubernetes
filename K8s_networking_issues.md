@@ -1,0 +1,4 @@
+## K8s Networking issues:
+- IPTABLES vs IPSET, Unfortunately, ipset is not an answer to all problems. A prominent example is kube-proxy, a component of Kubernetes that uses iptables and -j DNAT rules to provide load-balancing for services. It installs multiple iptables rules for each backend a service is serving to. For each service added to Kubernetes, the list of iptables rules to be traversed grows exponentially.
+- A recent KubeCon talk examined kube-proxy performance in all details. The talk presents measurements showing unpredictable latency and reduced performance as the number of services grows. It also reveals another major weakness of iptables: lack of incremental updates. The entire list of rules has to be replaced each time a new rule is added. This leads to a total duration of 5 hours to install the 160K iptables rules representing 20K Kubernetes services.
+- 
