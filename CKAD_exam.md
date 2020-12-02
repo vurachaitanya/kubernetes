@@ -13,8 +13,9 @@
 - https://kubernetes.io/docs/, https://github.com/kubernetes/,  https://kubernetes.io/blog/ are accessed
 - https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 
-## Cheetsheet
 
+
+## Cheetsheet
 - [Exam tips and hints](https://github.com/dgkanatsios/CKAD-exercises)
 - `kubectl explain Pod.spec.containers.livenessProbe` will share the detials of liveness proble commands and its options
 - sudo -i for admin commands
@@ -27,6 +28,8 @@
 - k explain pv --recursive|grep -A5 hostPath
 - k api-resources|grep -i replicationcontroller
 
+
+
 ### Speed aliases:
 ```
 alias k='kubectl'
@@ -37,6 +40,8 @@ alias ke='kubectl explain --recursive'
 alias kgp='kubectl get pods'
 alias kgs='kubectl get svc'
 ```
+
+
 ### Short names:
 ```
 NAME------>SHORTNAMES
@@ -71,6 +76,8 @@ podsecuritypolicies------>psp
 priorityclasses------>pc
 storageclasses------>sc
 ```
+
+
 ### Command explain/ Helping tools :
 - Kubectl help `kubectl run --help`
 - explain the ojbects of the resources `k explain pods`
@@ -79,7 +86,6 @@ storageclasses------>sc
 
 
 ### Imperative commands:
-
 - Create Pods:  `kubectl run hello-pod --image=nginx --restart=Never --dry-run=client -o yaml > hello-pod.yaml`
 - Expose a pod (using a service and specifying ports and service type): `kubectl expose po hello-pod --port=80 --target-port=9376 --type=NodePort`
 - Create Deployments: ` kubectl create deploy hello-deploy --image=nginx --dry-run=client -o yaml > hello-deploy.yaml`
@@ -115,7 +121,6 @@ spec:
 ```
 
 ## ReplicationController:
-
 - For each teamplate of pod label is required and matchlabel is optional
 
 ```
@@ -134,11 +139,9 @@ spec:
        - name: rc-container
          image: nginx
   replicas: 3
-
 ```
 
 ## ReplicaSet:
-
 - Diff b/w replicationcontroller vs replicaset are
    * Need to have matchLable must for replicaset
    * replicationcontroller apiVersion: v1 & replicaSet apiVersion = apps/v1
