@@ -33,11 +33,11 @@ alias k='kubectl'
 alias kd='kubectl describe'
 alias kr='kubectl run'
 alias kc='kubectl create'
-alias ke='kubectl explain'
+alias ke='kubectl explain --recursive'
 alias kgp='kubectl get pods'
 alias kgs='kubectl get svc'
 ```
-
+### Short names:
 ```
 NAME------>SHORTNAMES
 componentstatuses------>cs
@@ -71,6 +71,21 @@ podsecuritypolicies------>psp
 priorityclasses------>pc
 storageclasses------>sc
 ```
+### Command explain/ Helping tools :
+- Kubectl help `kubectl run --help`
+- explain the ojbects of the resources `k explain pods`
+- explain with resources/ojbects/variables used `k explain pod --recursive`
+- [K8s documentation cheetsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+
+### Imperative commands:
+
+- Create Pods:  `kubectl run hello-pod --image=nginx --restart=Never --dry-run=client -o yaml > hello-pod.yaml`
+- Expose a pod (using a service and specifying ports and service type): `kubectl expose po hello-pod --port=80 --target-port=9376 --type=NodePort`
+- Create Deployments: ` kubectl create deploy hello-deploy --image=nginx --dry-run=client -o yaml > hello-deploy.yaml`
+- Update deployment image to nginx:1.17.4: `kubectl set image deploy/hello-deploy nginx=nginx:1.17.4`
+- Scale a deployment:  `kubectl scale deploy hello-deploy --replicas=20`
+- Create Jobs:  `kubectl create job hello-job --image=busybox --dry-run=client -o yaml -- echo "Hello I am from job" > hello-job.yaml`
 
 
 ### Pod
