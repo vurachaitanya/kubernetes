@@ -14,6 +14,9 @@
 - https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 
 ## Cheetsheet
+
+- [Exam tips and hints](https://github.com/dgkanatsios/CKAD-exercises)
+- `kubectl explain Pod.spec.containers.livenessProbe` will share the detials of liveness proble commands and its options
 - sudo -i for admin commands
 - alias ctc='export KUBECONFIG=/root/kc/CTC/.kube/config;export CLU=CTC'
 - Set the default namespace kubectl config set-context $(kubectl config current-context) --namespace=dev
@@ -23,6 +26,53 @@
 - k get pod testpod -o yaml --export -----will give basic yaml file
 - k explain pv --recursive|grep -A5 hostPath
 - k api-resources|grep -i replicationcontroller
+
+### Speed aliases:
+```
+alias k='kubectl'
+alias kd='kubectl describe'
+alias kr='kubectl run'
+alias kc='kubectl create'
+alias ke='kubectl explain'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+```
+
+```
+NAME------>SHORTNAMES
+componentstatuses------>cs
+configmaps------>cm
+endpoints------>ep
+events------>ev
+limitranges------>limits
+namespaces------>ns
+nodes------>no
+persistentvolumeclaims------>pvc
+persistentvolumes------>pv
+pods------>po
+replicationcontrollers------>rc
+resourcequotas------>quota
+serviceaccounts------>sa
+services------>svc
+customresourcedefinitions------>crd,crds
+daemonsets------>ds
+deployments------>deploy
+replicasets------>rs
+statefulsets------>sts
+horizontalpodautoscalers------>hpa
+cronjobs------>cj
+jobs------>batch
+certificatesigningrequests------>csr
+events------>ev
+ingresses------>ing
+networkpolicies------>netpol
+poddisruptionbudgets------>pdb
+podsecuritypolicies------>psp
+priorityclasses------>pc
+storageclasses------>sc
+```
+
+
 ### Pod
 - apiVersion sholud be v1 and kind should be Pod.
 - Containers may have more than one hence those should be mentioned as lists
