@@ -95,9 +95,13 @@ storageclasses------>sc
 - To create YAML file without the cluster-specific information `kubectl get po nginx -o yaml --export`
 - Set the image to a running container `kubectl set image pod/nginx nginx=nginx:1.15-alpine`
 
-### Other commands:
+### Other common commands:
 - Using Json format: `kubectl get po nginx -o jsonpath='{.spec.containers[].}{"\n"}'`
 - Exec to the container `kubectl exec -it nginx /bin/sh`
+- Create a busybox pod and run command ls while creating it `kubectl run busybox --image=busybox --restart=Never -- ls`
+- Create a busybox pod with command sleep 3600 `kubectl run busybox --image=busybox --restart=Never -- /bin/sh -c "sleep 3600"`
+- If pod crashed check the previous logs of the pod `kubectl logs busybox -p`
+- Create a busybox pod and echo message How are you `kubectl run busybox --image=nginx --restart=Never -it -- echo "How are you"`
 
 
 ### Pod
