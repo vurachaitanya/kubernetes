@@ -102,6 +102,16 @@ storageclasses------>sc
 - Create a busybox pod with command sleep 3600 `kubectl run busybox --image=busybox --restart=Never -- /bin/sh -c "sleep 3600"`
 - If pod crashed check the previous logs of the pod `kubectl logs busybox -p`
 - Create a busybox pod and echo message How are you `kubectl run busybox --image=nginx --restart=Never -it -- echo "How are you"`
+- Some sample commands
+```
+k run --image=nginx
+k run --image=nginx --restart=Never
+k run nginx --image=nginx --restart=Never --port=80 --namespace=default --command -- serviceaccount=mysql --env=HOSTNAME=local --labels=bu=finance,env=dev --requests='cpu=100m,memory=256Mi' --limits='cpu=200m,memory=512Mi' --dry-run -o yaml -- /bin/sh -c "echo hello world"
+k create test --replicas=2 --labels=run=load --image=busybox --port=8080
+k expose deployment test --type=NodePort --name=testsvc --port=6262 --target-port=8080
+k set serviceaccount deployment test chaitu
+k create service clusterip svc --tcp=5778:8080 --dry-run -o yaml
+```
 
 
 ### Pod
