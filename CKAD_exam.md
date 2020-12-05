@@ -96,6 +96,9 @@ storageclasses------>sc
 - Set the image to a running container : `kubectl set image pod/nginx nginx=nginx:1.15-alpine`
 - Scale the replications : `kubectl scale deployment web --replicas=10`
 - Set the deployment image : `kubectl set image deployment web nginx=that-image-does-not-exist` 
+- Configmaps : `kubectl create configmap special-config --from-literal=SPECIAL_VAL_KEY=my_special_argument_val_for_my_app`
+- Labels: `kubectl label pods -l app=blue,version=v1.5 status=enabled`
+- unlabel/remove labels: `kubectl label pods -l app=blue,version=v1.4 status-`
 
 ### Other common commands:
 - Using Json format: `kubectl get po nginx -o jsonpath='{.spec.containers[].}{"\n"}'`
@@ -114,6 +117,10 @@ k expose deployment test --type=NodePort --name=testsvc --port=6262 --target-por
 k set serviceaccount deployment test chaitu
 k create service clusterip svc --tcp=5778:8080 --dry-run -o yaml
 ```
+
+
+## Important Note: 
+- `expose` : will load balance traffic across the running instances, and can create a HA proxy for accessing the containers from outside the cluster.
 
 
 ### Pod
