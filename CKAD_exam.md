@@ -91,9 +91,11 @@ storageclasses------>sc
 - Create Deployments: ` kubectl create deploy hello-deploy --image=nginx --dry-run=client -o yaml > hello-deploy.yaml`
 - Update deployment image to nginx:1.17.4: `kubectl set image deploy/hello-deploy nginx=nginx:1.17.4`
 - Scale a deployment:  `kubectl scale deploy hello-deploy --replicas=20`
-- Create Jobs:  `kubectl create job hello-job --image=busybox --dry-run=client -o yaml -- echo "Hello I am from job" > hello-job.yaml`
-- To create YAML file without the cluster-specific information `kubectl get po nginx -o yaml --export`
-- Set the image to a running container `kubectl set image pod/nginx nginx=nginx:1.15-alpine`
+- Create Jobs :  `kubectl create job hello-job --image=busybox --dry-run=client -o yaml -- echo "Hello I am from job" > hello-job.yaml`
+- To create YAML file without the cluster-specific information :  `kubectl get po nginx -o yaml --export`
+- Set the image to a running container : `kubectl set image pod/nginx nginx=nginx:1.15-alpine`
+- Scale the replications : `kubectl scale deployment web --replicas=10`
+- Set the deployment image : `kubectl set image deployment web nginx=that-image-does-not-exist` 
 
 ### Other common commands:
 - Using Json format: `kubectl get po nginx -o jsonpath='{.spec.containers[].}{"\n"}'`
