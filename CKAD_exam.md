@@ -13,6 +13,13 @@
 - https://kubernetes.io/docs/, https://github.com/kubernetes/,  https://kubernetes.io/blog/ are accessed
 - https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 
+- [reff1](https://medium.com/bb-tutorials-and-thoughts/practice-enough-with-these-questions-for-the-ckad-exam-2f42d1228552)
+- [reff2](https://medium.com/bb-tutorials-and-thoughts/15-tips-to-ace-the-ckad-and-cka-exam-eb59ab5406d2)
+- [reff3](https://kubectl.docs.kubernetes.io/)
+- [reff4](https://github.com/dgkanatsios/CKAD-exercises)
+- [reff5](https://github.com/dgkanatsios/CKAD-exercises/blob/master/c.pod_design.md)
+- [K8s troubleshooting](https://learnk8s.io/troubleshooting-deployments)
+- [ckad reff6](https://medium.com/chotot/tips-tricks-to-pass-certified-kubernetes-application-developer-ckad-exam-67c9e1b32e6e)
 
 
 ## Cheetsheet
