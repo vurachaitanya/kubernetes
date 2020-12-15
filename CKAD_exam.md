@@ -84,6 +84,10 @@ priorityclasses------>pc
 storageclasses------>sc
 ```
 
+#### Search keyworkds:
+- kubectl expose - 1st 
+
+
 
 ### Command explain/ Helping tools :
 - Kubectl help `kubectl run --help`
