@@ -88,6 +88,9 @@ storageclasses------>sc
 - kubectl expose - 1st 
 - pod command - 1st (for command parameter)
 - pod environment 2nd (for sample pod env var & Command parameters)
+- Persistent volume 1st (vol hostpath,nfs,PVC, POD_vol etc)
+- Network policy 
+
 
 ### Command explain/ Helping tools :
 - Kubectl help `kubectl run --help`
