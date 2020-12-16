@@ -86,8 +86,8 @@ storageclasses------>sc
 
 #### Search keyworkds:
 - kubectl expose - 1st 
-
-
+- pod command - 1st (for command parameter)
+- pod environment 2nd (for sample pod env var & Command parameters)
 
 ### Command explain/ Helping tools :
 - Kubectl help `kubectl run --help`
