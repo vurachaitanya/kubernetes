@@ -21,6 +21,7 @@
 - [K8s troubleshooting](https://learnk8s.io/troubleshooting-deployments)
 - [ckad reff6](https://medium.com/chotot/tips-tricks-to-pass-certified-kubernetes-application-developer-ckad-exam-67c9e1b32e6e)
 
+- [Exam1](https://github.com/vurachaitanya/personal/blob/master/CKAD_exam1.md)
 
 ## Cheetsheet
 - [Exam tips and hints](https://github.com/dgkanatsios/CKAD-exercises)
@@ -90,6 +91,7 @@ storageclasses------>sc
 - pod environment 2nd (for sample pod env var & Command parameters)
 - Persistent volume 1st (vol hostpath,nfs,PVC, POD_vol etc)
 - Network policy 
+- node taint 1st (taints & tolerations)
 
 
 ### Command explain/ Helping tools :
