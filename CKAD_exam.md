@@ -92,6 +92,8 @@ storageclasses------>sc
 - Persistent volume 1st (vol hostpath,nfs,PVC, POD_vol etc)
 - Network policy 
 - node taint 1st (taints & tolerations)
+- ingress path 1st (path based / Host base routing)
+- networkpolicy ingress 1st (Netpolicy for ingress Egress)
 
 
 ### Command explain/ Helping tools :
