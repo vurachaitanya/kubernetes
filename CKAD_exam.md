@@ -36,7 +36,7 @@
 - k explain pv --recursive|grep -A5 hostPath
 - k api-resources|grep -i replicationcontroller
 
-
+### [PRE Exam Preperation](https://github.com/jcasanella/kubernetes_dev_certif/tree/7f18a36a0cb434afbcc52b4f011d768be79b641b/ckad/dgkanatsios_preprac/core_concepts)
 
 ### Speed aliases:
 ```
