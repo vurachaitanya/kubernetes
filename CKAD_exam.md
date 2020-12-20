@@ -23,6 +23,12 @@
 
 - [Exam1](https://github.com/vurachaitanya/personal/blob/master/CKAD_exam1.md)
 
+- [Sample Yaml files](https://github.com/godomainz/kubernetes/tree/d64a84139b45818e9d65f3fa11740291bde89d1f/ApplicationDeveloper)
+- [sample CKAD Ref yaml files based on components](https://github.com/loncarales/certification-practice-material/tree/e796e12bbda508b6650bf0d3f8fe50864c934c2f/CKAD)
+- [CKAD Tips](https://github.com/princeanurag2011/myDocs/blob/99a0b1ecfa87de948f7e2d5709bf3dae98d6654a/Docs/K8s/CKAD/CKA-TIPS.yml)
+- [Kubectl commands](https://github.com/greg2018/KODEKLOUD-KUBERNETES-CKAD/blob/21ffdbf405ac855063aee28012d738a5be0c5890/Tips-KODEKLOUD-KUBERNETES-CKAD.txt)
+
+
 ## Cheetsheet
 - [Exam tips and hints](https://github.com/dgkanatsios/CKAD-exercises)
 - `kubectl explain Pod.spec.containers.livenessProbe` will share the detials of liveness proble commands and its options
